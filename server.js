@@ -1,6 +1,5 @@
 // server.js
 const express = require('express');
-const fetch = require('node-fetch'); // Если Node.js v18+, можно использовать встроенный fetch
 const path = require('path');
 
 const app = express();
@@ -19,16 +18,13 @@ app.post('/api/chat', async (req, res) => {
   }
 
   try {
-    // Формируем тело запроса в соответствии с ожидаемым форматом
     const bodyPayload = {
-      model: 'llama3.3:latest', // или используйте нужную модель, например "llama3:latest"
-      messages: [
-        { role: "user", content: prompt }
-      ],
-      max_tokens: 150  // при необходимости можно увеличить/уменьшить
+      model: 'llama3:latest', // используем правильное имя модели
+      messages: [{ role: "user", content: prompt }],
+      max_tokens: 150
     };
 
-    // Отправляем POST-запрос к Ollama
+    // Используем встроенный fetch
     const ollamaResponse = await fetch('https://ollama.degdarr.kz/v1/chat/completions', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -37,10 +33,11 @@ app.post('/api/chat', async (req, res) => {
 
     const data = await ollamaResponse.json();
 
-    // Извлекаем ответ из data.choices, если он есть
-    const responseText = (data.choices && data.choices.length > 0 && data.choices[0].message && data.choices[0].message.content)
-      ? data.choices[0].message.content
-      : "No response received";
+    // Извлекаем ответ из структуры data.choices
+    const responseText =
+      (data.choices && data.choices.length > 0 && data.choices[0].message && data.choices[0].message.content)
+        ? data.choices[0].message.content
+        : "No response received";
 
     res.json({ response: responseText });
   } catch (error) {

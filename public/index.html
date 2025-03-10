@@ -2,23 +2,50 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <title>Чат с Ollama</title>
+  <title>Чат с Ollama - One Piece Luffy Style</title>
+  <!-- Подключаем Tailwind CSS из CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Дополнительные настройки Tailwind (если нужно) -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            onepieceBlue: '#1E3A8A',
+            onepieceRed: '#DC2626',
+            onepieceGold: '#FBBF24'
+          },
+          fontFamily: {
+            'pirate': ['"Comic Sans MS"', 'cursive'] // можно заменить на более подходящий шрифт
+          }
+        }
+      }
+    }
+  </script>
   <style>
-    body { font-family: Arial, sans-serif; background: #f0f0f0; margin: 0; padding: 0; }
-    .chat-container { width: 100%; max-width: 600px; margin: 50px auto; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-    .messages { height: 300px; overflow-y: auto; border: 1px solid #ddd; padding: 10px; margin-bottom: 10px; }
-    .input-group { display: flex; }
-    .input-group input { flex: 1; padding: 10px; font-size: 16px; }
-    .input-group button { padding: 10px 20px; font-size: 16px; }
+    /* Фон с лёгким узором, можно заменить на изображение с подходящей тематикой */
+    body {
+      background-image: url('https://via.placeholder.com/1920x1080/1E3A8A/ffffff?text=One+Piece+Vibes');
+      background-size: cover;
+      background-attachment: fixed;
+    }
+    /* Полупрозрачный фон для чата */
+    .chat-bg {
+      background-color: rgba(255, 255, 255, 0.9);
+    }
   </style>
 </head>
-<body>
-  <div class="chat-container">
-    <h2>Чат с Ollama</h2>
-    <div class="messages" id="messages"></div>
-    <div class="input-group">
-      <input type="text" id="userInput" placeholder="Введите сообщение..." />
-      <button onclick="sendMessage()">Отправить</button>
+<body class="min-h-screen flex items-center justify-center p-4">
+  <div class="chat-container chat-bg rounded-xl shadow-2xl p-6 w-full max-w-lg">
+    <h2 class="text-3xl font-pirate text-onepieceRed text-center mb-4">Чат с Ollama</h2>
+    <div class="messages h-80 overflow-y-auto border border-gray-300 p-4 mb-4 rounded" id="messages"></div>
+    <div class="input-group flex">
+      <input type="text" id="userInput" placeholder="Введите сообщение..."
+             class="flex-1 p-3 rounded-l border border-r-0 border-gray-300 focus:outline-none focus:ring-2 focus:ring-onepieceGold" />
+      <button onclick="sendMessage()"
+              class="bg-onepieceRed text-white px-4 py-3 rounded-r hover:bg-onepieceGold transition-colors">
+        Отправить
+      </button>
     </div>
   </div>
   <script>
@@ -46,6 +73,7 @@
       const messagesDiv = document.getElementById('messages');
       const messageElement = document.createElement('div');
       messageElement.textContent = text;
+      messageElement.className = "mb-2 text-gray-800";
       messagesDiv.appendChild(messageElement);
       messagesDiv.scrollTop = messagesDiv.scrollHeight;
     }

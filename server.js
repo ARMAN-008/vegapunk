@@ -46,6 +46,10 @@ app.post('/api/chat', async (req, res) => {
   }
 });
 
+const data = await ollamaResponse.json();
+console.log('Response from Ollama:', data);
+
+
 // Запуск сервера
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

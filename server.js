@@ -19,19 +19,30 @@ app.post('/api/chat', async (req, res) => {
   }
 
   try {
-    // Отправка POST-запроса к Ollama (проверьте, что ваш Ollama запущен и доступен по этому адресу)
+    // Формируем тело запроса в соответствии с ожидаемым форматом
+    const bodyPayload = {
+      model: 'llama3.3:latest', // или используйте нужную модель, например "llama3:latest"
+      messages: [
+        { role: "user", content: prompt }
+      ],
+      max_tokens: 150  // при необходимости можно увеличить/уменьшить
+    };
+
+    // Отправляем POST-запрос к Ollama
     const ollamaResponse = await fetch('https://ollama.degdarr.kz/v1/chat/completions', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'llama3.3:latest', // или другая модель, которую вы используете
-        prompt: prompt
-      })
+      body: JSON.stringify(bodyPayload)
     });
 
     const data = await ollamaResponse.json();
-    // Предполагаем, что ответ от Ollama находится в data.response; адаптируйте, если структура другая
-    res.json({ response: data.response || "No response received" });
+
+    // Извлекаем ответ из data.choices, если он есть
+    const responseText = (data.choices && data.choices.length > 0 && data.choices[0].message && data.choices[0].message.content)
+      ? data.choices[0].message.content
+      : "No response received";
+
+    res.json({ response: responseText });
   } catch (error) {
     console.error('Error communicating with Ollama:', error);
     res.status(500).json({ error: 'Internal server error' });

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Чат с Ollama</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f0f0f0; margin: 0; padding: 0; }
+    .chat-container { width: 100%; max-width: 600px; margin: 50px auto; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    .messages { height: 300px; overflow-y: auto; border: 1px solid #ddd; padding: 10px; margin-bottom: 10px; }
+    .input-group { display: flex; }
+    .input-group input { flex: 1; padding: 10px; font-size: 16px; }
+    .input-group button { padding: 10px 20px; font-size: 16px; }
+  </style>
+</head>
+<body>
+  <div class="chat-container">
+    <h2>Чат с Ollama</h2>
+    <div class="messages" id="messages"></div>
+    <div class="input-group">
+      <input type="text" id="userInput" placeholder="Введите сообщение..." />
+      <button onclick="sendMessage()">Отправить</button>
+    </div>
+  </div>
+  <script>
+    async function sendMessage() {
+      const input = document.getElementById('userInput');
+      const message = input.value.trim();
+      if (!message) return;
+      appendMessage('Вы: ' + message);
+      input.value = '';
+
+      try {
+        const response = await fetch('/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ prompt: message })
+        });
+        const data = await response.json();
+        appendMessage('Ollama: ' + data.response);
+      } catch (error) {
+        appendMessage('Ошибка: ' + error.message);
+      }
+    }
+
+    function appendMessage(text) {
+      const messagesDiv = document.getElementById('messages');
+      const messageElement = document.createElement('div');
+      messageElement.textContent = text;
+      messagesDiv.appendChild(messageElement);
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    }
+  </script>
+</body>
+</html>

@@ -23,6 +23,9 @@ app.post('/api/chat', async (req, res) => {
       max_tokens: 150
     };
 
+    console.log('Request payload:', JSON.stringify(bodyPayload));
+
+
     // Используем глобальный fetch (доступен в Node.js v18+)
     const ollamaResponse = await fetch('https://ollama.degdarr.kz/v1/chat/completions', {
       method: 'POST',

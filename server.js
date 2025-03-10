@@ -1,4 +1,3 @@
-// server.js
 const express = require('express');
 const path = require('path');
 
@@ -19,12 +18,12 @@ app.post('/api/chat', async (req, res) => {
 
   try {
     const bodyPayload = {
-      model: 'llama3:latest', // используем правильное имя модели
+      model: 'llama3:latest', // Используем корректное значение
       messages: [{ role: "user", content: prompt }],
       max_tokens: 150
     };
 
-    // Используем встроенный fetch
+    // Используем глобальный fetch (доступен в Node.js v18+)
     const ollamaResponse = await fetch('https://ollama.degdarr.kz/v1/chat/completions', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -33,11 +32,13 @@ app.post('/api/chat', async (req, res) => {
 
     const data = await ollamaResponse.json();
 
-    // Извлекаем ответ из структуры data.choices
-    const responseText =
-      (data.choices && data.choices.length > 0 && data.choices[0].message && data.choices[0].message.content)
-        ? data.choices[0].message.content
-        : "No response received";
+    // Извлекаем ответ из структуры ответа Ollama
+    const responseText = (data.choices &&
+                          data.choices.length > 0 &&
+                          data.choices[0].message &&
+                          data.choices[0].message.content)
+                          ? data.choices[0].message.content
+                          : "No response received";
 
     res.json({ response: responseText });
   } catch (error) {
@@ -45,10 +46,6 @@ app.post('/api/chat', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
-
-const data = await ollamaResponse.json();
-console.log('Response from Ollama:', data);
-
 
 // Запуск сервера
 app.listen(PORT, () => {

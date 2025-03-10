@@ -20,7 +20,7 @@ app.post('/api/chat', async (req, res) => {
 
   try {
     // Отправка POST-запроса к Ollama (проверьте, что ваш Ollama запущен и доступен по этому адресу)
-    const ollamaResponse = await fetch('http://localhost:11434/run', {
+    const ollamaResponse = await fetch('https://ollama.degdarr.kz/v1/chat/completions', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
